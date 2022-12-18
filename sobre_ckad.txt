@@ -1,0 +1,15 @@
+lista todos los pods de todos los namespaces mostrando el nombre del pod y el namespace  en formato jsonpath
+
+$ kubectl get pod -A -o jsonpath="{.items[*]['metadata.name' , 'metadata.namespace']}"
+
+muestra un pod con diferentes niveles de verbosía
+
+$ kubectl get pod nginx --v=7
+$ kubectl get pod nginx --v=8
+$ kubectl get pod nginx --v=9
+
+para listar todos los pods haciendo sort de una propiedad como el nombre del pod
+
+$ kubectl get pods --sort-by=.metadata.name
+
+Java_s_ninja69*kubernetes

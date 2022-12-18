@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front-app
+spec:
+  replicas: {{ .Values.frontReplicaCount }}
+  selector: 
+    matchLabels:
+      app: front-app
+  template:
+    metadata:
+      labels:
+        app: front-app
+    spec:
+      containers:
+        - name: f1
+          image: ubuntu:18.04
+          command: ["bin/bash"]
+          args: ["-c","apt update && apt install -y apache2 iputils-ping; service apache2 start; wart; while true; do echo '<h1>{{ .Values.appTittle }}</h1>' > /var/wwww/html/index.html ; ping -c 1 back-deployment-service.default.svc.cluster.local >> /var/www/html/index.html ; sleep 60; done "]
+  ---
+  apiVersion: v1
+  kind: Service
+  
