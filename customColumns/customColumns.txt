@@ -1,0 +1,10 @@
+Una manera de debuggear pods es en formato columnas
+
+$ kubectl get pod -o custom-columns=POD_NAME:.metadata.name,POD_IP:.status.podIP,CREATED_AT:.status.startTime
+
+lo que espera el flag custom-columns después del "=" es el nombre customizado que queremos darle a la informacion ":" y el acceso hasta el campo que queremos , en este caso NO necesitamos especificar quese encuentra dentro del array items
+
+pero si deberemos de especificar el array containers si queremos información como la imagen
+
+$ kubectl get pod -o custom-columns=POD_NAME:.metadata.name,POD_IMAGE:.spec.containers[*].image,POD_IP:.status.podIP,CREATED_AT:.status.startTime
+

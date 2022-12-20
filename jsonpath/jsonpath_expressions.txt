@@ -1,0 +1,20 @@
+para ver la conectividad de un pod busybox por ejemplo usamos
+$ kubectl exec -it busybox  -- sh -c "netstat -lntp"
+
+Podemos ver cada uno de los items del array así
+$ kubectl get pod -o yaml
+
+también podemos usar jsonpath de la siguiente manera con \n para dar saltos de linea por cada elemento
+$ kubectl get pod -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+
+cuando queremos varios elementos del pod uno junto al otro
+
+$ kubectl get pod -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.podIP}{"\n"}{end}'
+
+$ kubectl get pod -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.podIP}{"\t"}{.status.startTime}{"\n"}{end}'
+
+para no tener que estar tipeando expresiones jsonpath también podemos guardar estas en archivos .sh "mirar dentro del directorio ejecutables"
+
+a cada uno de estos archivos .sh le damos permisos de ejecucion
+
+$ chmod u+x <nombre_archivo.sh>

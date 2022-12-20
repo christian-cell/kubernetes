@@ -1,0 +1,55 @@
+$ service kubelet status
+
+también podemos ver una lista de todos los logos con
+
+$ jounalctl -u kubelet
+
+si dice kubelet not found en la ruta que el espera , podemos buscar kubelet 
+
+$ which kubelet
+
+output /usr/bin/kubelet
+
+cuando corrimos 
+
+$ service kubelet status
+
+devuelve una línea como esta
+
+Drop-In: /etc/systemd/system/kubelet.service.d
+             └─10-kubeadm.conf
+
+podemos hacer 
+
+$ sudo vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+y en la parte de "ExecStart" modificar la ruta por la que nos dá el comando
+
+$ which kubelet
+
+por ultimo reseteamos
+
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl restart kubelet
+
+si "kubectl sigue sin funcionar" podemos probar
+
+$ kubectl cluster-info
+
+podemos ver si el certificado del cluster sigue vigente
+
+cat ~/.kube/config
+
+ver el cluster y copiar el certificado en base64 o si es el de minikube imprimir el archivo de la ruta
+
+cat /home/christian/.minikube/ca.crt
+
+si esta en base64 lo decodificamos
+
+$ echo "certificatebase64value" | base64 -d
+
+y vemos si es el mismo que el cluster está usando
+
+" en caso que no sea cluster de minikube "
+$ sudo cat /etc/kubernetes/pki/ca.crt
