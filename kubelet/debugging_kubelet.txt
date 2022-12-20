@@ -52,4 +52,25 @@ $ echo "certificatebase64value" | base64 -d
 y vemos si es el mismo que el cluster está usando
 
 " en caso que no sea cluster de minikube "
-$ sudo cat /etc/kubernetes/pki/ca.crt
+
+$ cat ~/.minikube/ca.crt
+
+en caso de error también debemos de debuggear la dirección ip del cluster
+
+$ kubectl get node -o wide
+
+la ip del nodo control-plane tiene que ser la misma que
+
+$ kubectl cluster-info #vemos la ip de que nodo esta usando
+
+$ kubectl config view
+
+la ip del cluster que estamos usando
+
+en caso de no ser la misma modificamos el config kube
+
+$ vim ~/.kube/config
+
+en clusters minikube address ponemos la que nos retorne el control-plane $kubectl get node -o wide
+
+
