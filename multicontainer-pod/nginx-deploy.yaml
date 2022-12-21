@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+      - name: log-sidecar
+        image: busybox:1.28
+        command: ["sh","-c"]
+        args:
+        - while true ; do
+            echo sync app logs;
+            printenv POD_NAME POD_SERVICE_ACCOUNT POD_IP ;
+            sleep 20;
+          done;
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_SERVICE_ACCOUNT
+          valueFrom: 
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP              
+
