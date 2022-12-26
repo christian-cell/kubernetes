@@ -1,5 +1,5 @@
 #modificar nombre de usuario para crear en el cluster
-user="charlie"
+user=charlie
 csrExpire=864000 #damos una validez de 10 días en segundos
 cluster="minikube"
 namespace="testing" 
@@ -33,7 +33,7 @@ kind: CertificateSigningRequest
 metadata:
   name: "${user}"
 spec:
-  request: "${csrB64Encoded=cat}"
+  request: "${csrB64Encoded}"
   signerName: kubernetes.io/kube-apiserver-client
   expirationSeconds: ${csrExpire}  # one day
   usages:
