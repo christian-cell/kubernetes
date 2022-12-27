@@ -41,3 +41,23 @@ en cambio un pvc debe ser montado en el pod para este poder tener acceso a esa d
 los claim deben ser creados en el mismo namespace que los pods que accedan a el , de esta manera evitamos que otras aplicaciones puedan acceder a el
 
 esto no quita para que otro namespace tenga un pv o un pvc que pueda acceder también a ese storage pero con su propio pv o pvc
+
+para configurar un PersistenVolume que acceda al espacio en localdisk
+
+dentro del spec una ruta local
+
+hostpath:
+  path: "/mnt/data"
+
+creamos el pvc que encontrará el pv que cumpla con sus requisitos
+
+cuando creamos el pvc en el cluster vemos que el pv pasa de retain a Bound , quiere decir que ese pv ha coincidido con la petición de un pvc y ha sido atachado a este , ya no estará más available
+
+por último creamos un deploy de mysql por ejemplo declaramos la lista de volumenes en el spec del deploy y lo montamos en el contenedor de mysql , a partir de ahora este container de mysql va a tener acceso al disco local
+
+Configuramos en variables de entorno las credenciales de mysql , hardcodeamos el password como ejemplo pero es mejor poner ValueFrom secret
+
+podemos ver rutas locales de interes como estas
+
+sudo ls -la /var/lib/docker/volumes/minikube-m03/_data/hostpath-provisioner/default/mysql-pvc
+
