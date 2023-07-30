@@ -1,8 +1,8 @@
 #modificar nombre de usuario para crear en el cluster
-user=charlie
+user=roberto
 csrExpire=864000 #damos una validez de 10 días en segundos
 cluster="minikube"
-namespace="testing" 
+namespace="dev" 
 embed=false
 
 #creamos un directorio para el usuario
@@ -17,7 +17,7 @@ openssl genrsa -out "${user}".key 2048
 
 
 #creamos la peticion de firma del certificado csr
-openssl req -new -key "${user}".key --subj="/CN='${user}'" -out "${user}".csr
+openssl req -new -key "${user}".key --subj="/CN=${user}" -out "${user}".csr
 
 #guardamos dentro de una variable el valor del csr en base64
 csrB64Encoded=$(cat "${user}".csr | base64 | tr -d "\n")
@@ -46,11 +46,14 @@ kubectl get csr
 #aprobamos el csr generado en el cluster
 kubectl certificate approve "${user}"
 
+#listamos los csr para ver que se aprobó
+kubectl get csr
+
 #generamos el .crt del usuario
 kubectl get csr "${user}" -o jsonpath='{.status.certificate}'| base64 -d > "${user}".crt
 
 #añadimos el usuario y su contexto al cluster
-kubectl config set-credentials "${user}" --client-key="${user}".key --client-certificate="${user}".crt --embed-certs="${embed}"
+kubectl config set-credentials ${user} --client-key="${user}".key --client-certificate="${user}".crt --embed-certs="${embed}"
 
 #listamos los usuarios
 kubectl config get-users
@@ -64,7 +67,5 @@ kubectl config get-contexts
 #switch al nuevo contexto
 kubectl config set-context "${user}"-context
 
-#testeamos el nuevo contexto Forbidden = todo ha salido bien , connection refuse tenemos algún paso mal
-#muy probablemente el comando que creamos el usuario al especificar el cluster o el namespace 
-
+# testeamos el nuevo contexto Forbidden = todo ha salido bien , connection refuse tenemos algún paso mal
 kubectl get pod
